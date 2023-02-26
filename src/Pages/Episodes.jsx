@@ -1,51 +1,60 @@
 import {useState, useEffect} from 'react'
-import Card from '../components/Card/Card'
-import Search from '../components/Search/Search'
+// import Card from '../components/Card/Card'
+// import Search from '../components/Search/Search'
+import Pagination from '../components/Pagination/Pagination'
+// import Footer from '../components/Footer/Footer'
 
 const Episodes = () => {
-  const [id, setId] = useState(1)
-  const [info, setInfo] = useState([])
-  const [results, setResults] = useState([])
-  const {air_date, name} = info
+  const [pageNumber, setPageNumber] = useState(1)
+  const [episodes, setEpisodes] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const api = `https://rickandmortyapi.com/api/episode/${id}`
+  const api = `https://rickandmortyapi.com/api/episode/?${pageNumber}&name=${searchTerm}`
+  const {info} = episodes
+  console.log(episodes)
 
   useEffect(() => {
-    (async function (){
-      const data = await fetch(api)
-        .then(res => res.json())
-        setInfo(data)
+    async function fetchData() {
+      const response = await fetch(api);
+      const data = await response.json();
+      setEpisodes(data.results);
+    }
 
-      const a = await Promise.all(
-        data.characters.map((x) => {
-          return fetch(x).then(res => res.json())
-        })
-      )
-      setResults(a)
-    })()
-  }, [api])
+    fetchData();
+  }, [api]);
+
+  function handleSearch(e) {
+    setSearchTerm(e.target.value);
+  }
+
+  console.log(episodes)
 
   return (
-    <div>
-      <div>
-        <h1>Episode: {name === '' ? 'Unknown' : name}</h1>
-        <h5>Air Date: {air_date === '' ? 'Unknown' : air_date}</h5>
+    <div className="max-w-md mx-auto">
+      <div className="mb-4">
+        <input 
+          type="text" 
+          value={searchTerm} 
+          onChange={handleSearch}
+          className="border rounded px-2 py-1 w-full"
+        />
+        <ul>
+          {episodes.map((episode) => (
+            <li key={episode.id} className="border-b py-4">
+              <h3 className="text-xl font-bold mb-2">{episode.name}</h3>
+              <p className="text-gray-600">Episode: {episode.episode}</p>
+              <p className="text-gray-600">Air date: {episode.air_date}</p>
+            </li>
+          ))}
+        </ul>
       </div>
-      <div>
-        <div>
-          <div>
-            <h4>Pick Episode</h4>
-            <Search />
-          </div>
-        </div>
-        <div>
-          <div>
-            <Card page='/episodes/' results={results} />
-          </div>
-        </div>
-      </div>
+      <Pagination 
+          info={info} 
+          pageNumber={pageNumber} 
+          setPageNumber={setPageNumber}
+      />
     </div>
-  )
+  );
 }
 
 export default Episodes

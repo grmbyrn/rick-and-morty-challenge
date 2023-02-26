@@ -1,50 +1,45 @@
 import {useState, useEffect} from 'react'
-import Card from '../components/Card/Card'
+// import Card from '../components/Card/Card'
 
 const Locations = () => {
-  const [id, setId] = useState(1)
-  const [info, setInfo] = useState([])
-  const [results, setResults] = useState([])
-  const {name, type, dimension} = info
+  const [pageNumber, setPageNumber] = useState(1)
+  const [locations, setLocations] = useState([])
+  const [searchTerm, setSearchTerm] = useState('')
 
-  const api = `https://rickandmortyapi.com/api/location/${id}`
+  const api = `https://rickandmortyapi.com/api/location/?${pageNumber}&name=${searchTerm}`
 
   useEffect(() => {
-    (async function (){
-      const data = await fetch(api)
-        .then(res => res.json())
-        setInfo(data)
+    async function fetchData(){
+      const response = await fetch(api)
+      const data = await response.json()
+      setLocations(data.results)
+    }
 
-      const a = await Promise.all(
-        data.residents.map((x) => {
-          return fetch(x).then(res => res.json())
-        })
-      )
-      setResults(a)
-    })()
+    fetchData()
   }, [api])
+
+  function handleSearch(e){
+    setSearchTerm(e.target.value)
+  }
+
   return (
-    <div>
-      <div>
-        <h1>Location: {name === '' ? 'Unknown' : name}</h1>
-        <h5>
-          Dimension: {dimension === '' ? 'Unknown' : dimension}
-        </h5>
-        <h6>
-          Type: {type === '' ? 'Unknown' : type}
-        </h6>
-      </div>
-      <div>
-        <div>
-          <div>
-            <h4>Pick Location</h4>
-          </div>
-        </div>
-        <div>
-          <div>
-            <Card page='/location/' results={results} />
-          </div>
-        </div>
+    <div className="max-w-md mx-auto">
+      <div className="mb-4">
+        <input
+          type="text" 
+          value={searchTerm} 
+          onChange={handleSearch}
+          className="border rounded px-2 py-1 w-full" 
+        />
+        <ul>
+          {locations.map((location) => (
+            <li key={location.id} className="border py-4">
+              <h3 className="text-xl font-bold mb-2">Name: {location.name}</h3>
+              <p className="text-gray-600">Type: {location.type}</p>
+              <p className="text-gray-600">Dimension: {location.dimension}</p>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   )

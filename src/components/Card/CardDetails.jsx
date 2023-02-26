@@ -5,7 +5,7 @@ const CardDetails = () => {
   const {id} = useParams()
   const [fetchedData, setFetchedData] = useState([])
   const {name, image, location, origin, gender, species, status, episode} = fetchedData
-  console.log(fetchedData)
+  
   const api = `https://rickandmortyapi.com/api/character/${id}`
   useEffect(() => {
     async function fetchData(){
