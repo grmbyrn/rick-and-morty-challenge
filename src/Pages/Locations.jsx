@@ -1,12 +1,16 @@
 import {useState, useEffect} from 'react'
-// import Card from '../components/Card/Card'
+import Footer from '../components/Footer/Footer'
+import Pagination from '../components/Pagination/Pagination'
+import Search from '../components/Search/Search'
 
 const Locations = () => {
   const [pageNumber, setPageNumber] = useState(1)
   const [locations, setLocations] = useState([])
-  const [searchTerm, setSearchTerm] = useState('')
+  const [search, setSearch] = useState('')
+  console.log(locations)
 
-  const api = `https://rickandmortyapi.com/api/location/?${pageNumber}&name=${searchTerm}`
+  const api = `https://rickandmortyapi.com/api/location/?name=${search}`
+  const {info} = locations
 
   useEffect(() => {
     async function fetchData(){
@@ -18,18 +22,12 @@ const Locations = () => {
     fetchData()
   }, [api])
 
-  function handleSearch(e){
-    setSearchTerm(e.target.value)
-  }
-
   return (
     <div className="max-w-md mx-auto">
       <div className="mb-4">
-        <input
-          type="text" 
-          value={searchTerm} 
-          onChange={handleSearch}
-          className="border rounded px-2 py-1 w-full" 
+        <Search
+          setPageNumber={setPageNumber}
+          setSearch={setSearch}
         />
         <ul>
           {locations.map((location) => (
@@ -41,6 +39,12 @@ const Locations = () => {
           ))}
         </ul>
       </div>
+      <Pagination 
+          info={info} 
+          pageNumber={pageNumber} 
+          setPageNumber={setPageNumber}
+      />
+      <Footer />
     </div>
   )
 }

@@ -60,7 +60,10 @@ const Home = () =>  {
           <p className='text-white text-2xl font-thin mt-4'>Lorem Ipsum dolor sit amet</p>
           <button className='bg-pink-500 text-white px-4 py-2 rounded-lg mt-4'>Subscribe</button>
         </div>
-        <Search setPageNumber={setPageNumber} setSearch={setSearch} />
+        <Search
+          setPageNumber={setPageNumber}
+          setSearch={setSearch}
+        />
         <div className='bg-gray-500'>
           <div className="">
             <div className="">
@@ -76,7 +79,7 @@ const Home = () =>  {
         <Footer />
       </div>
     </>
-  );
+  )
 }
 
 export default App;

@@ -1,42 +1,36 @@
 import {useState, useEffect} from 'react'
 // import Card from '../components/Card/Card'
-// import Search from '../components/Search/Search'
+import Search from '../components/Search/Search'
 import Pagination from '../components/Pagination/Pagination'
-// import Footer from '../components/Footer/Footer'
+import Footer from '../components/Footer/Footer'
 
 const Episodes = () => {
   const [pageNumber, setPageNumber] = useState(1)
-  const [episodes, setEpisodes] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [episodes, setEpisodes] = useState([])
+  const [search, setSearch] = useState('')
 
-  const api = `https://rickandmortyapi.com/api/episode/?${pageNumber}&name=${searchTerm}`
+  const api = `https://rickandmortyapi.com/api/episode/?${pageNumber}&name=${search}`
   const {info} = episodes
   console.log(episodes)
 
   useEffect(() => {
     async function fetchData() {
-      const response = await fetch(api);
-      const data = await response.json();
-      setEpisodes(data.results);
+      const response = await fetch(api)
+      const data = await response.json()
+      setEpisodes(data.results)
     }
 
-    fetchData();
-  }, [api]);
-
-  function handleSearch(e) {
-    setSearchTerm(e.target.value);
-  }
+    fetchData()
+  }, [api])
 
   console.log(episodes)
 
   return (
     <div className="max-w-md mx-auto">
       <div className="mb-4">
-        <input 
-          type="text" 
-          value={searchTerm} 
-          onChange={handleSearch}
-          className="border rounded px-2 py-1 w-full"
+        <Search
+          setPageNumber={setPageNumber}
+          setSearch={setSearch}
         />
         <ul>
           {episodes.map((episode) => (
@@ -53,8 +47,9 @@ const Episodes = () => {
           pageNumber={pageNumber} 
           setPageNumber={setPageNumber}
       />
+      <Footer />
     </div>
-  );
+  )
 }
 
 export default Episodes
